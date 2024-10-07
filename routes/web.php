@@ -25,6 +25,8 @@ Route::get('/funciones/login', [AuthController::class, 'login'])->name('login');
 // Ruta para manejar el inicio de sesión
 Route::post('/login', [AuthController::class, 'validacion'])->name('validacion');
 
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 // // Rutas protegidas que requieren autenticación
 
 Route::middleware(['auth'])->group(function () {
