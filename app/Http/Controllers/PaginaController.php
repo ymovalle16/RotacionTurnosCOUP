@@ -14,4 +14,9 @@ class PaginaController extends Controller
         }
         return view('index');
     }
+
+    public function rotaciones()
+    {
+        return view('rotaciones');
+    }
 }

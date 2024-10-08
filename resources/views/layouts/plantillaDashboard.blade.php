@@ -20,7 +20,7 @@
 </head>
 <body>
     <header class="navbar fixed-top p-0 ">
-        <a href="" class="navbar-brand  m-0 text-light col-lg-2">Cooperativa Urbanos Pereira</a>
+        <a href="{{route ('index')}}" class="navbar-brand  m-0 text-light col-lg-2">Cooperativa Urbanos Pereira</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed border-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -34,9 +34,17 @@
     <div class="container-fluid">
         <div class="row flex">
             <nav id="sidebarMenu"class="col-md-6 col-lg-2 pt-5">
-                <div class="position-sticky"><div class="logo"><img src="{{asset('img/logo.png')}}" alt=""></div>  </div>
+                <div class="position-sticky">
+                    <div class="logo"><img src="{{asset('img/logo.png')}}" alt=""></div>
+                    <div class="menu text-center w-100 mt-5">
+                        <ul class="list-unstyled">
+                            <li class="mb-3"><a class="navbar-brand" href="{{route ('index')}}">Principal</a></li>
+                            <li class="mb-3"><a class="navbar-brand" href="{{route ('rotaciones')}}">Rotaciones</a></li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
-            <main class=""><h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas maiores vero reiciendis ab quibusdam architecto quas pariatur, ullam, dicta vel beatae optio laboriosam veniam molestiae placeat obcaecati ut quae laborum!Deserunt, sapiente laudantium. Quo ab quia harum a blanditiis atque enim voluptate sequi officiis quae sapiente aperiam molestias consectetur fugit architecto, et hic perferendis. Repellat deserunt odio libero natus nostrum.</h6></main>
+            @yield('content')
         </div>
     </div>
 {{-- Scripts de bootstrap --}}

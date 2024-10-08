@@ -31,6 +31,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/index', [PaginaController::class, 'index'])->name('index');
+    Route::get('/rotaciones', [PaginaController::class, 'rotaciones'])->name('rotaciones');
 });
 
 

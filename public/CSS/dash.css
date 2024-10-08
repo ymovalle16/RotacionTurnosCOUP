@@ -40,7 +40,7 @@ body{
     font-weight: 500;
 }
 
-nav{
+#sidebarMenu{
     background-color: #fff;
     height: 100vh;
     position: fixed;
@@ -79,4 +79,31 @@ main{
     background-color: #039651;
 }
 
+main h1{
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
 
+.page-item{
+    margin: 0 10px 0 10px;
+}
+
+.page-item a{
+    background-color: #ffcc2a;
+}
+
+.page-item a:hover{
+    background-color: #e7ba27;
+}
+
+.page-item a:focus{
+    box-shadow: none;
+    outline: none;
+    background-color: #ffcc2a;
+}
+
+.linea{
+    height: 2px; /* Ajustar el grosor */
+    background-color: black; /* Cambia este color */
+    opacity: 100;
+}
