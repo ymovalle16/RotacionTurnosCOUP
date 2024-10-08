@@ -84,30 +84,6 @@ main h1{
     margin-left: 20px;
 }
 
-.page-item{
-    margin: 0 10px 0 10px;
-}
-
-.page-item a{
-    background-color: #ffcc2a;
-}
-
-.page-item a:hover{
-    background-color: #e7ba27;
-}
-
-.page-item a:focus{
-    box-shadow: none;
-    outline: none;
-    background-color: #ffcc2a;
-}
-
-.linea{
-    height: 2px; /* Ajustar el grosor */
-    background-color: black; /* Cambia este color */
-    opacity: 100;
-}
-
 .encabezado{
     display: flex;
     width: 95%;
@@ -116,12 +92,10 @@ main h1{
     margin: 0 auto;
 }
 
-.encabezado .btn{
-    background-color: #ffcc2a;
-    height: max-content;
+main .form-control{
+    width: 65%;
 }
 
-.encabezado .btn:hover{
-    background-color: #e7ba27;
-    color: #fff;
+.form-group{
+    margin-bottom: 20px;
 }

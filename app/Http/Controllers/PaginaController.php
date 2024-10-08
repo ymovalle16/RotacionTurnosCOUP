@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\Operator;
 
 class PaginaController extends Controller
 {
@@ -12,11 +13,19 @@ class PaginaController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-        return view('index');
+        $operators = Operator::all();
+        return view('index', compact('operators'));
     }
 
     public function rotaciones()
     {
         return view('rotaciones');
     }
+
+    public function ingresarOperador()
+    {
+        return view('ingresarOperador');
+    }
+
+
 }

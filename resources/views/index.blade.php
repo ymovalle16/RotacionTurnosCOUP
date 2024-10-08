@@ -18,13 +18,15 @@
         </ul>
     </div>
     @endif
-
-    <h1 class="navbar-brand fs-2 border-bottom border-2 p-2">Operadores</h1>
+    <div class="encabezado">
+        <h1 class="navbar-brand fs-2 p-2">Operadores</h1>
+        <a href="{{route ('ingresarOperador')}}" class="btn">Ingresar</a>
+    </div>
+    
     <div class="table-responsive m-4 bg-light shadow">
         <table class="table">
             <thead>
                 <tr>
-                  <th scope="col">#</th>
                   <th scope="col">Código</th>
                   <th scope="col">Nombre</th>
                   <th scope="col">Bus asignado</th>
@@ -32,27 +34,14 @@
                 </tr>
               </thead>
               <tbody class="table-group-divider">
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                  <td>Example</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                  <td>Example</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                  <td>Example</td>
-                </tr>
-                
+                @foreach ($operators as $operator)
+                    <tr>
+                    <td>{{ $operator->code }}</td>
+                    <td>{{ $operator->name }}</td>
+                    <td>{{ $operator->bus_code }}</td>
+                    <td>{{ $operator->status }}</td>
+                    </tr>
+                @endforeach 
               </tbody>
         </table>
         <hr class="linea">
