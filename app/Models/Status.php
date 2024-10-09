@@ -5,19 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Operator extends Model
+class Status extends Model
 {
     use HasFactory;
-
      // Si el nombre de la tabla no sigue la convención plural
-     protected $table = 'operators'; // Opcional, ya que Laravel lo deduce automáticamente
+     protected $table = 'statuses'; // Opcional, ya que Laravel lo deduce automáticamente
 
      // Definimos los campos que pueden ser asignados en masa
      protected $fillable = [
-         'code',
-         'name',
-         'bus_code',
-         'status',
+        'id_status',
+        'status_name',
      ];
 
     // Si tienes alguna relación con otros modelos, puedes definirla aquí
@@ -26,5 +23,4 @@ class Operator extends Model
     // {
     //     return $this->hasMany(Bus::class);
     // }
-
 }

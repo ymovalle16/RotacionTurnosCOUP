@@ -99,3 +99,24 @@ main .form-control{
 .form-group{
     margin-bottom: 20px;
 }
+
+.form-group input:focus{
+    box-shadow: none;
+    outline: none;
+    border: 1px solid lightgrey;
+}
+
+.form-group select:focus{
+    box-shadow: none;
+    outline: none;
+    border: 1px solid lightgrey;
+}
+
+.boton .btn{
+    background-color: #ffcc2a;
+}
+
+.boton .btn:hover{
+    background-color: #e7ba27;
+    color: #fff;
+}
