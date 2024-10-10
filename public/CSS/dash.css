@@ -84,19 +84,19 @@ main h1{
     margin-left: 20px;
 }
 
-.page-item{
+.current-page{
     margin: 0 10px 0 10px;
 }
 
-.page-item a{
+.pagination a{
     background-color: #ffcc2a;
 }
 
-.page-item a:hover{
+.pagination a:hover{
     background-color: #e7ba27;
 }
 
-.page-item a:focus{
+.pagination a:focus{
     box-shadow: none;
     outline: none;
     background-color: #ffcc2a;

@@ -120,3 +120,20 @@ main .form-control{
     background-color: #e7ba27;
     color: #fff;
 }
+
+.bot{
+    background-color: rgb(216, 49, 49);
+    color: #fff;
+}
+
+.boton a{
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 6px 0 0 0;
+
+}
+
+.bot:hover{
+    background-color: rgb(189, 38, 38);
+    color: #fff;
+}

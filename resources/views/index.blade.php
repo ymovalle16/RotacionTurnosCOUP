@@ -23,99 +23,134 @@
         <a href="{{route ('ingresarOperador')}}" class="btn">Ingresar</a>
     </div>
     
-    <div class="table-responsive m-4 bg-light shadow">
-        <table class="table">
+    <div class="table-responsive m-4 bg-light shadow p-2">
+        <table class="table operators">
             <thead>
                 <tr>
-                  <th scope="col">Código</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Bus asignado</th>
-                  <th scope="col">Estado</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Bus asignado</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
                 </tr>
-              </thead>
-              <tbody class="table-group-divider">
+            </thead>
+            <tbody class="table-group-divider operators">
                 @foreach ($operators as $operator)
                     <tr>
-                    <td>{{ $operator->code }}</td>
-                    <td>{{ $operator->name }}</td>
-                    <td>{{ $operator->bus_code }}</td>
-                    <td>{{ $operator->status->status_name }}<td>
+                        <td>{{ $operator->code }}</td>
+                        <td>{{ $operator->name }}</td>
+                        <td>{{ $operator->bus_code }}</td>
+                        <td>{{ $operator->status->status_name }}</td>
+                        <td>
+                            {{-- href="{{route ('editarOpe', $operator->id)}}"  PONERLO DESPUÉS DE TENER LA OPCIÓN DE CREAR BUSES--}}
+                            <a class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a>
+                            <a class="btn btn-sm btn-danger"><img src="{{asset ('img/delete.png')}}" alt="" class="w-25"></a>
+                        </td>
                     </tr>
-                @endforeach 
-              </tbody>
+                @endforeach
+            </tbody>
         </table>
         <hr class="linea">
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                <li class="page-item">
+        <nav class="pagination operators justify-content-center">
+            <a class="page-link prev text-dark" href="#" aria-label="Previous">
+                <span aria-hidden="true"><</span>
+            </a>
+            <span class="current-page"></span>
+            <a class="page-link next text-dark" href="#" aria-label="Next">
+                <span aria-hidden="true">></span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="navbar-brand fs-2 p-2">Buses disponibles</h1>
+            <div class="table-responsive m-4 bg-light shadow p-2">
+                <table class="table buses">
+                    <thead>
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider buses">
+                        <tr>
+                            <td>111</td>
+                            <td>Varada</td>
+                            <td>
+                                <a class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a>
+                                <a class="btn btn-sm btn-danger"><img src="{{asset ('img/delete.png')}}" alt="" class="w-25"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr class="linea">
+                <nav class="pagination buses justify-content-center">
                     <a class="page-link prev text-dark" href="#" aria-label="Previous">
                         <span aria-hidden="true"><</span>
                     </a>
-                </li>
-                <span class="current-page"></span>
-                <li class="page-item">
+                    <span class="current-page"></span>
                     <a class="page-link next text-dark" href="#" aria-label="Next">
                         <span aria-hidden="true">></span>
                     </a>
-                </li>
-            </ul>
-        </nav>
+                </nav>
+            </div>
+        </div>
+        <div class="col-md-6"></div>
     </div>
+
 </main>
 
 <script>
-// get the table and pagination container
-const table = document.querySelector('.table');
-const paginationContainer = document.querySelector('.pagination');
-const prevLink = paginationContainer.querySelector('.prev');
-const nextLink = paginationContainer.querySelector('.next');
-const currentPageSpan = paginationContainer.querySelector('.current-page');
+   function handlePagination(tableSelector, paginationSelector) {
+    const table = document.querySelector(tableSelector);
+    const paginationContainer = document.querySelector(paginationSelector);
+    const prevLink = paginationContainer.querySelector('.prev');
+    const nextLink = paginationContainer.querySelector('.next');
+    const currentPageSpan = paginationContainer.querySelector('.current-page');
 
-// set the number of records per page
-const recordsPerPage = 10;
+    const recordsPerPage = 10;
+    const totalRecords = table.querySelectorAll('tbody tr').length;
+    const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
-// get the total number of records
-const totalRecords = table.rows.length - 1; // subtract 1 for the header row
+    let currentPage = 1;
+    showPage(currentPage);
 
-// calculate the number of pages
-const totalPages = Math.ceil(totalRecords / recordsPerPage);
-
-// show the first page by default
-let currentPage = 1;
-showPage(currentPage);
-
-// add event listeners to navigation arrows
-prevLink.addEventListener('click', (event) => {
-    event.preventDefault();
-    if (currentPage > 1) {
-        showPage(--currentPage);
-    }
-});
-
-nextLink.addEventListener('click', (event) => {
-    event.preventDefault();
-    if (currentPage < totalPages) {
-        showPage(++currentPage);
-    }
-});
-
-// function to show a specific page
-function showPage(pageNumber) {
-    const startIndex = (pageNumber - 1) * recordsPerPage;
-    const endIndex = startIndex + recordsPerPage;
-
-    // hide all rows
-    Array.from(table.rows).forEach((row, index) => {
-        if (index === 0) return; // skip header row
-        row.style.display = (index - 1 >= startIndex && index - 1 < endIndex) ? '' : 'none';
+    prevLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (currentPage > 1) {
+            showPage(--currentPage);
+        }
     });
 
-    // update the current page number
-    currentPageSpan.textContent = `Página ${pageNumber} de ${totalPages}`;
+    nextLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (currentPage < totalPages) {
+            showPage(++currentPage);
+        }
+    });
+
+    function showPage(pageNumber) {
+        const startIndex = (pageNumber - 1) * recordsPerPage;
+        const endIndex = startIndex + recordsPerPage;
+
+        table.querySelectorAll('tbody tr').forEach((row, index) => {
+            row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
+        });
+
+        currentPageSpan.textContent = `Página ${pageNumber} de ${totalPages}`;
+    }
 }
+
+// Llama a la función para ambas tablas
+document.addEventListener('DOMContentLoaded', () => {
+    handlePagination('.table.operators', '.pagination.operators');
+    handlePagination('.table.buses', '.pagination.buses');
+});
+
 
 
 </script>
-
 
 @endsection
