@@ -23,4 +23,8 @@ class Status extends Model
     // {
     //     return $this->hasMany(Bus::class);
     // }
+    public function operators() {
+        return $this->hasMany(Operator::class, 'id_status');
+    }
+    
 }

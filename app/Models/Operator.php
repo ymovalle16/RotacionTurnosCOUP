@@ -17,7 +17,7 @@ class Operator extends Model
          'code',
          'name',
          'bus_code',
-         'status',
+         'id_status',
      ];
 
     // Si tienes alguna relación con otros modelos, puedes definirla aquí
@@ -26,5 +26,8 @@ class Operator extends Model
     // {
     //     return $this->hasMany(Bus::class);
     // }
+    public function status() {
+        return $this->belongsTo(Status::class, 'id_status'); // Assuming the foreign key in your operators table is status_id
+    }
 
 }

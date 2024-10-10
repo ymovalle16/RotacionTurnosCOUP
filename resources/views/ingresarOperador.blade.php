@@ -42,9 +42,9 @@
         <div class="form-group justify-content-between d-flex w-75 mx-auto">
             <label class="fs-5" for="tipo_identificacion">Estado<span class="text-danger">*</span></label> 
             <div>
-                <select style="width:300px;" name="status" class="form-control " title="Seleccione el estado" required>
+                <select style="width:300px;" name="id_status" class="form-control " title="Seleccione el estado" required>
                     @foreach ($status as $state )
-                        <option value="{{$state->id_status }}">{{$state->status_name}}</option>
+                        <option value="{{$state->id }}">{{$state->status_name}}</option>
                     @endforeach
                 </select>
             </div>

@@ -15,6 +15,7 @@ class PaginaController extends Controller
             return redirect()->route('login');
         }
         $operators = Operator::all();
+        $operators = Operator::with('status')->get();
         return view('index', compact('operators'));
     }
 
@@ -35,14 +36,14 @@ class PaginaController extends Controller
             'code' => 'required|string|max:5',
             'name' => 'required|string|max:155',
             'bus_code' => 'required|string|max:5',
-            'status' => 'required|exists:statuses,id_status',
+            'id_status' => 'required|exists:statuses,id',
         ]);
 
         $operator = new Operator();
         $operator->code = $validatedData['code'];
         $operator->name = $validatedData['name'];
         $operator->bus_code = $validatedData['bus_code'];
-        $operator->status = $validatedData['status'];
+        $operator->id_status = $validatedData['id_status'];
 
         if (Operator::where('code', $validatedData['code'])->exists()) {
             return redirect()->back()->withInput()->withErrors([

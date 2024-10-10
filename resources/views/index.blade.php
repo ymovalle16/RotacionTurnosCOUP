@@ -39,7 +39,7 @@
                     <td>{{ $operator->code }}</td>
                     <td>{{ $operator->name }}</td>
                     <td>{{ $operator->bus_code }}</td>
-                    <td>{{ $operator->status }}<td>
+                    <td>{{ $operator->status->status_name }}<td>
                     </tr>
                 @endforeach 
               </tbody>
