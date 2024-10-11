@@ -22,7 +22,12 @@ class PaginaController extends Controller
         $buses = Bus::whereHas('statusBus', function ($query) {
             $query->where('status_name', '!=', 'Asignada');
         })->with('statusBus')->get();
-        return view('index', compact('operators', 'buses'));
+
+        $operatorss = Operator::whereHas('status', function ($query) {
+            $query->where('status_name', '=', 'Descanso');
+        })->get();
+
+        return view('index', compact('operators', 'buses', 'operatorss'));
     }
 
     public function rotaciones()

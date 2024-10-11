@@ -44,7 +44,6 @@
                         <td>
                             {{-- href="{{route ('editarOpe', $operator->id)}}"  PONERLO DESPUÉS DE TENER LA OPCIÓN DE CREAR BUSES--}}
                             <a class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a>
-                            <a class="btn btn-sm btn-danger"><img src="{{asset ('img/delete.png')}}" alt="" class="w-25"></a>
                         </td>
                     </tr>
                 @endforeach
@@ -84,7 +83,6 @@
                                 <td>{{ $bus->statusBus->status_name }}</td>
                                 <td>
                                     <a class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a>
-                                    <a class="btn btn-sm btn-danger"><img src="{{asset ('img/delete.png')}}" alt="" class="w-25"></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -102,7 +100,28 @@
                 </nav>
             </div>
         </div>
-        <div class="col-md-6"></div>
+        <div class="col-md-6">
+            <div class="encabezado2">
+                <h1 class="navbar-brand fs-2 p-2">Descansos</h1>
+            </div>
+            <div class="table-responsive m-4 bg-light shadow p-2">
+                <table class="table buses">
+                    <thead>
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Nombre</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider buses">
+                        @foreach ($operatorss as $operato)
+                            <tr>
+                                <td>{{ $operato->code }}</td>
+                                <td>{{ $operato->name }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+        </div>
     </div>
 </main>
 
