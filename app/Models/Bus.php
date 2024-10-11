@@ -15,13 +15,16 @@ class Bus extends Model
     // Definimos los campos que pueden ser asignados en masa
     protected $fillable = [
         'code',
-        'status',
+        'id_status',
     ];
 
-   // Si tienes alguna relación con otros modelos, puedes definirla aquí
-   // Por ejemplo, si hay una relación con un modelo Bus:
-   // public function buses()
-   // {
-   //     return $this->hasMany(Bus::class);
-   // }
+    // Si tienes alguna relación con otros modelos, puedes definirla aquí
+    // Por ejemplo, si hay una relación con un modelo Bus:
+    // public function buses()
+    // {
+    //     return $this->hasMany(Bus::class);
+    // }
+    public function statusBus() {
+        return $this->belongsTo(StatusBus::class, 'id_status'); // Assuming the foreign key in your operators table is status_id
+    }
 }
