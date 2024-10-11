@@ -1,6 +1,6 @@
 @extends('layouts.plantillaDashboard')
 
-@section('title', 'Ingresar Operador')
+@section('title', 'Ingresar Bus')
 
 @section('estilos')
 <link rel="stylesheet" href="{{asset('CSS/ingOpe.css')}}">
@@ -10,7 +10,7 @@
 <main>
 
     <div class="encabezado">
-        <h1 class="navbar-brand fs-2 p-2">Ingresar Operador</h1>
+        <h1 class="navbar-brand fs-2 p-2">Ingresar Bus</h1>
     </div>
     @if(session('success'))
             <div class="alert alert-success mt-3" style="width: 90%; margin: 0 auto">
@@ -27,7 +27,7 @@
         </ul>
     </div>
     @endif
-    <form action="{{route ('ingresoOpe')}}" method="POST" class="form-control mx-auto p-5 mt-5 mb-5 shadow">
+    <form action="{{route ('ingresoBus')}}" method="POST" class="form-control mx-auto p-5 mt-5 mb-5 shadow">
         @csrf
         <div class="form-group justify-content-between d-flex w-75 mx-auto">
             <label class="fs-5" for="numero_docu">Código<span class="text-danger">*</span></label> 
@@ -35,27 +35,11 @@
         </div>
 
         <div class="form-group justify-content-between d-flex w-75 mx-auto">
-            <label class="fs-5" for="numero_docu">Nombre<span class="text-danger">*</span></label> 
-            <input style="width:300px;" type="text" id="name" name="name" class="form-control" value="" required>
-        </div>
-
-        <div class="form-group justify-content-between d-flex w-75 mx-auto">
-            <label class="fs-5" for="tipo_identificacion">Código de bus<span class="text-danger">*</span></label> 
-            <div>
-                <select style="width:300px;" name="bus_code" class="form-control " title="Seleccione el código de bus" required>
-                    @foreach ($availableBuses as $bus)
-                        <option value="{{ $bus->code }}">{{ $bus->code }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group justify-content-between d-flex w-75 mx-auto">
             <label class="fs-5" for="tipo_identificacion">Estado<span class="text-danger">*</span></label> 
             <div>
-                <select style="width:300px;" name="id_status" class="form-control " title="Seleccione el estado" required>
-                    @foreach ($status as $state )
-                        <option value="{{$state->id }}">{{$state->status_name}}</option>
+                <select style="width:300px;" name="status_id" class="form-control " title="Seleccione el estado" required>
+                    @foreach ($statusBus as $statu )
+                        <option value="{{$statu->id }}">{{$statu->status_name}}</option>
                     @endforeach
                 </select>
             </div>

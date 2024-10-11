@@ -20,7 +20,7 @@
     @endif
     <div class="encabezado">
         <h1 class="navbar-brand fs-2 p-2">Operadores</h1>
-        <a href="{{route ('ingresarOperador')}}" class="btn">Ingresar</a>
+        <a href="{{route ('ingresarOperador')}}" class="btn">Ingresar operador</a>
     </div>
     
     <div class="table-responsive m-4 bg-light shadow p-2">
@@ -62,9 +62,12 @@
         </nav>
     </div>
 
-    <div class="row">
+    <div class="row mt-5">
         <div class="col-md-6">
-            <h1 class="navbar-brand fs-2 p-2">Buses disponibles</h1>
+            <div class="encabezado2">
+                <h1 class="navbar-brand fs-2 p-2">Buses no asignados</h1>
+                <a href="{{route ('ingresarBus')}}" class="btn btn-sm">Ingresar bus</a>
+            </div>
             <div class="table-responsive m-4 bg-light shadow p-2">
                 <table class="table buses">
                     <thead>
@@ -75,14 +78,16 @@
                         </tr>
                     </thead>
                     <tbody class="table-group-divider buses">
-                        <tr>
-                            <td>111</td>
-                            <td>Varada</td>
-                            <td>
-                                <a class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a>
-                                <a class="btn btn-sm btn-danger"><img src="{{asset ('img/delete.png')}}" alt="" class="w-25"></a>
-                            </td>
-                        </tr>
+                        @foreach ($buses as $bus)
+                            <tr>
+                                <td>{{ $bus->code }}</td>
+                                <td>{{ $bus->statusBus->status_name }}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a>
+                                    <a class="btn btn-sm btn-danger"><img src="{{asset ('img/delete.png')}}" alt="" class="w-25"></a>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
                 <hr class="linea">
@@ -99,7 +104,6 @@
         </div>
         <div class="col-md-6"></div>
     </div>
-
 </main>
 
 <script>

@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('buses', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 5);
-            $table->unsignedBigInteger('id_status');;
+            $table->string('code', 5)->unique();
+            $table->unsignedBigInteger('status_id');;
             $table->timestamps();
 
-            $table->foreign('id_status')->references('id')->on('statuses')->onDelete('cascade');
+            $table->foreign('status_id')->references('id')->on('statuses_bus')->onDelete('cascade');
         });
     }
 

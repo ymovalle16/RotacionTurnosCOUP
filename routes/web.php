@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/rotaciones', [PaginaController::class, 'rotaciones'])->name('rotaciones');
     Route::get('/ingresarOperador', [PaginaController::class, 'ingresarOperador'])->name('ingresarOperador');
     Route::post('/ingresarOperador', [PaginaController::class, 'ingresoOpe'])->name('ingresoOpe');
+    Route::get('/ingresarBus', [PaginaController::class, 'ingresarBus'])->name('ingresarBus');
+    Route::post('/ingresarBus', [PaginaController::class, 'ingresoBus'])->name('ingresoBus');
 });
 
 

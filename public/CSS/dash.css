@@ -125,3 +125,21 @@ main h1{
     background-color: #e7ba27;
     color: #fff;
 }
+
+.encabezado2{
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(185, 185, 185);
+    margin: 0 auto;
+}
+
+.encabezado2 .btn{
+    background-color: #ffcc2a;
+    height: max-content;
+}
+
+.encabezado2 .btn:hover{
+    background-color: #e7ba27;
+    color: #fff;
+}

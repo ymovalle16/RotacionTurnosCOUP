@@ -13,7 +13,7 @@ class StatusBus extends Model
 
     // Definimos los campos que pueden ser asignados en masa
     protected $fillable = [
-       'id_status',
+       'status_id',
        'status_name',
     ];
 
@@ -24,6 +24,6 @@ class StatusBus extends Model
    //     return $this->hasMany(Bus::class);
    // }
    public function buses() {
-       return $this->hasMany(Bus::class, 'id_status');
+       return $this->hasMany(Bus::class, 'status_id');
    }
 }
