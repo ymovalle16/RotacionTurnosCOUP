@@ -18,7 +18,8 @@
     {{-- Favicon --}}
     <link rel="icon" type="ima/png" href="{{asset('img/logo.png')}}">
 </head>
-<body>
+    
+<body style="background-color: rgb(236, 234, 234);">
     <header class="navbar fixed-top p-0 ">
         <a href="{{route ('index')}}" class="navbar-brand  m-0 text-light col-lg-2">Cooperativa Urbanos Pereira</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed border-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">

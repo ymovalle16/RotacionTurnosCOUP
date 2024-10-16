@@ -22,7 +22,8 @@ class TypeStatusSeeder extends Seeder
             'Incapacitado',
             'Permiso',
             'Vacaciones',
-            'Suspendido'
+            'Suspendido',
+            'Retirado'
         ];
         foreach ( $TypeStatus as $statuses){
             Status::create([

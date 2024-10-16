@@ -3,7 +3,7 @@
 @section('title', 'Ingresar Operador')
 
 @section('estilos')
-<link rel="stylesheet" href="{{asset('CSS/ingOpe.css')}}">
+<link rel="stylesheet" href="{{asset('CSS/ingEdi.css')}}">
 @endsection
 
 @section('content')
@@ -43,6 +43,7 @@
             <label class="fs-5" for="tipo_identificacion">Código de bus<span class="text-danger">*</span></label> 
             <div>
                 <select style="width:300px;" name="bus_code" class="form-control " title="Seleccione el código de bus" required>
+                    <option value="Sin código">Sin bus asignado</option>
                     @foreach ($availableBuses as $bus)
                         <option value="{{ $bus->code }}">{{ $bus->code }}</option>
                     @endforeach

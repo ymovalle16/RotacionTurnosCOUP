@@ -45,35 +45,44 @@ class PaginaController extends Controller
     }
 
     public function ingresoOpe(Request $request)
-    {
-        $validatedData = $request->validate([
-            'code' => 'required|string|max:5',
-            'name' => 'required|string|max:155',
-            'bus_code' => 'required|exists:buses,code',
-            'id_status' => 'required|exists:statuses,id',
+{
+    // dd($request->all());
+    $validatedData = $request->validate([
+        'code' => 'required|string|max:5',
+        'name' => 'required|string|max:155',
+        'bus_code' => 'required|string|max:20', // Permitir "Sin código" como válido
+        'id_status' => 'required|exists:statuses,id',
+    ]);
+
+    // Manejar el bus_code
+    $busCode = $validatedData['bus_code'] === 'Sin código' ? null : $validatedData['bus_code']; // Cambia 'Sin código' a null
+
+    $operator = new Operator();
+    $operator->code = $validatedData['code'];
+    $operator->name = $validatedData['name'];
+    $operator->bus_code = $busCode; // Usar $busCode
+    $operator->id_status = $validatedData['id_status'];
+
+    if (Operator::where('code', $validatedData['code'])->exists()) {
+        return redirect()->back()->withInput()->withErrors([
+            'code' => 'Ya existe un operador con este código',
         ]);
-
-        $operator = new Operator();
-        $operator->code = $validatedData['code'];
-        $operator->name = $validatedData['name'];
-        $operator->bus_code = $validatedData['bus_code'];
-        $operator->id_status = $validatedData['id_status'];
-
-        if (Operator::where('code', $validatedData['code'])->exists()) {
-            return redirect()->back()->withInput()->withErrors([
-                'code' => 'Ya existe un operador con este código',
-            ]);
-        }
-
-        // Actualiza el estado del bus a "Asignado"
-        $bus = Bus::where('code', $validatedData['bus_code'])->first();
-        $assignedStatus = StatusBus::where('status_name', 'Asignada')->first(); 
-        $bus->status_id = $assignedStatus->id;
-        $bus->save();
-
-        $operator->save();
-        return redirect()->route('ingresarOperador')->with('success', 'El ingreso ha sido exitoso');
     }
+
+    // Solo actualizar el estado del bus si se eligió un bus válido
+    if ($busCode !== null) {
+        $bus = Bus::where('code', $busCode)->first();
+
+        if ($bus) { // Verificar si el bus existe
+            $assignedStatus = StatusBus::where('status_name', 'Asignada')->first(); 
+            $bus->status_id = $assignedStatus->id;
+            $bus->save();
+        }
+    }
+
+    $operator->save();
+    return redirect()->route('index')->with('success', 'El ingreso del operador ha sido exitoso');
+}
 
     public function ingresarBus()
     {
@@ -99,7 +108,98 @@ class PaginaController extends Controller
         }
 
         $bus->save();
-        return redirect()->route('ingresarBus')->with('success', 'El ingreso ha sido exitoso');
+        return redirect()->route('index')->with('success', 'El ingreso del bus ha sido exitoso');
+    }
+
+    public function editarOpe($id)
+    {
+        $operator = Operator::find($id);
+        $availableBuses = Bus::whereHas('statusBus', function ($query) {
+            $query->where('status_name', '=', 'Disponible');
+        })->get();
+        $statusBus = StatusBus::all();
+        $status = Status::all();
+        return view('editarOpe', compact('operator', 'availableBuses', 'statusBus', 'status'));
+    }
+
+    public function actualizarOperador(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'sometimes|required|string|max:155',
+            'id_status' => 'sometimes|required|exists:statuses,id',
+            'current_bus_status_id' => 'nullable|exists:statuses_bus,id',
+            'new_bus_code' => 'nullable|exists:buses,code',
+        ]);
+
+        $operator = Operator::findOrFail($id);
+        $operator->name = $validatedData['name'];
+        $operator->id_status = $validatedData['id_status'];
+
+        if ($request->has('new_bus_code') && !$operator->bus_code) {
+            // Asignar nueva buseta
+            $operator->bus_code = $validatedData['new_bus_code'];
+            $newBus = Bus::where('code', $validatedData['new_bus_code'])->first();
+            if ($newBus) {
+                $assignedStatus = StatusBus::where('status_name', 'Asignada')->first();
+                if ($assignedStatus) {
+                    $newBus->status_id = $assignedStatus->id;
+                    $newBus->save();
+                } else {
+                    return redirect()->back()->withErrors(['error' => 'El estado "Asignada" no se encuentra en la base de datos.']);
+                }
+            } else {
+                return redirect()->back()->withErrors(['error' => 'El nuevo bus no se encuentra en la base de datos.']);
+            }
+        }
+
+        if ($request->change_bus === 'yes' && $operator->bus_code) {
+            // Actualizar estado del bus actual
+            if ($request->current_bus_status_id) {
+                $currentBus = Bus::where('code', $operator->bus_code)->first();
+                if ($currentBus) {
+                    $currentBus->status_id = $validatedData['current_bus_status_id'];
+                    $currentBus->save();
+                }
+            }
+
+            // Asignar nueva buseta al operador o dejar "Sin bus"
+            if ($request->new_bus_code) {
+                $operator->bus_code = $validatedData['new_bus_code'];
+                $newBus = Bus::where('code', $validatedData['new_bus_code'])->first();
+                if ($newBus) {
+                    $assignedStatus = StatusBus::where('status_name', 'Asignada')->first();
+                    if ($assignedStatus) {
+                        $newBus->status_id = $assignedStatus->id;
+                        $newBus->save();
+                    } else {
+                        return redirect()->back()->withErrors(['error' => 'El estado "Asignada" no se encuentra en la base de datos.']);
+                    }
+                } else {
+                    return redirect()->back()->withErrors(['error' => 'El nuevo bus no se encuentra en la base de datos.']);
+                }
+            } else {
+                // Si no se selecciona nuevo bus, poner el campo bus_code a null
+                $operator->bus_code = null;
+            }
+        }
+
+        $operator->save();
+
+        return redirect()->route('index')->with('success', 'Operador actualizado exitosamente');
+    }
+
+    public function editarBus($id)
+    {
+        $bus =  Bus::find($id);
+        $statusBus = StatusBus::all();
+        return view('editarBus', compact('bus', 'statusBus'));
+    }
+
+    public function actualizarBus($id)
+    {
+        $bus =  Bus::find($id);
+        $statusBus = StatusBus::all();
+        return view('editarBus', compact('bus', 'statusBus'));
     }
 
 }

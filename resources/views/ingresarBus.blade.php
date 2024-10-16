@@ -3,7 +3,7 @@
 @section('title', 'Ingresar Bus')
 
 @section('estilos')
-<link rel="stylesheet" href="{{asset('CSS/ingOpe.css')}}">
+<link rel="stylesheet" href="{{asset('CSS/ingEdi.css')}}">
 @endsection
 
 @section('content')

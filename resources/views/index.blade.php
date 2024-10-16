@@ -18,6 +18,11 @@
         </ul>
     </div>
     @endif
+    @if(session('success'))
+    <div class="alert alert-success" style="width: 100%; margin: 0 auto; margin-bottom: 10px;">
+        {{ session('success') }}
+    </div>
+    @endif
     <div class="encabezado">
         <h1 class="navbar-brand fs-2 p-2">Operadores</h1>
         <a href="{{route ('ingresarOperador')}}" class="btn">Ingresar operador</a>
@@ -39,11 +44,20 @@
                     <tr>
                         <td>{{ $operator->code }}</td>
                         <td>{{ $operator->name }}</td>
-                        <td>{{ $operator->bus_code }}</td>
+                        @if($operator->bus_code)
+                            <td>{{ $operator->bus_code }}</td>
+                        @else
+                            <td><p>Sin bus Asignado</p></td>
+                        @endif
                         <td>{{ $operator->status->status_name }}</td>
                         <td>
                             {{-- href="{{route ('editarOpe', $operator->id)}}"  PONERLO DESPUÉS DE TENER LA OPCIÓN DE CREAR BUSES--}}
-                            <a class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a>
+                            {{-- <a class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a> --}}
+                            <!-- Button trigger modal -->
+                        <a href="{{route ('editarOpe', $operator->id)}}" class="btn btn-sm btn-success">
+                            <img src="{{asset ('img/edit.png')}}" alt="" class="w-25">
+                        </a>
+                        
                         </td>
                     </tr>
                 @endforeach
@@ -82,7 +96,7 @@
                                 <td>{{ $bus->code }}</td>
                                 <td>{{ $bus->statusBus->status_name }}</td>
                                 <td>
-                                    <a class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a>
+                                    <a href="{{route ('editarBus', $bus->id)}}" class="btn btn-sm btn-success"><img src="{{asset ('img/edit.png')}}" alt="" class="w-25"></a>
                                 </td>
                             </tr>
                         @endforeach

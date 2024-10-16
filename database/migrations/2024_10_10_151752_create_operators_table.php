@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code', 5)->unique();
             $table->string('name', 155);
-            $table->string('bus_code', 5);
+            $table->string('bus_code', 20)->nullable();
             $table->unsignedBigInteger('id_status'); // Clave foránea
             $table->timestamps();
             
