@@ -7,6 +7,27 @@
 @endsection
 
 @section('content')
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.table.operators').DataTable({
+        "paging": false, 
+        "searching": false, 
+        "info": false, 
+        "ordering": true, 
+    });
+
+    $('.table.buses').DataTable({
+        "paging": false, 
+        "searching": false, 
+        "info": false, 
+        "ordering": true, 
+    });
+});
+</script>
+
 <main class="">
     <!-- Mostrar errores si existen -->
     @if ($errors->any())
@@ -29,13 +50,16 @@
     </div>
     
     <div class="table-responsive m-4 bg-light shadow p-2">
-        <table class="table operators">
+        <div class="search-container m-4 d-right d-flex justify-content-end">
+            <input type="text" id="searchInput" placeholder="Busca por Código, Nombre, Código de bus o estado" class="form-control rounded-0 w-50"/>
+        </div>
+        <table class="table operators" id="tablaOperadores">
             <thead>
                 <tr>
-                    <th scope="col">Código</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Bus asignado</th>
-                    <th scope="col">Estado</th>
+                    <th scope="col" >Código</th>
+                    <th scope="col" >Nombre</th>
+                    <th scope="col" >Bus asignado</th>
+                    <th scope="col" >Estado</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
@@ -82,6 +106,9 @@
                 <a href="{{route ('ingresarBus')}}" class="btn btn-sm">Ingresar bus</a>
             </div>
             <div class="table-responsive m-4 bg-light shadow p-2">
+                <div class="search-container m-4 d-right d-flex justify-content-end">
+                    <input type="text" id="searchInput2" placeholder="Busca por Código o Estado" class="form-control rounded-0 w-75"/>
+                </div>
                 <table class="table buses">
                     <thead>
                         <tr>
@@ -119,7 +146,7 @@
                 <h1 class="navbar-brand fs-2 p-2">Descansos</h1>
             </div>
             <div class="table-responsive m-4 bg-light shadow p-2">
-                <table class="table buses">
+                <table class="table descansos">
                     <thead>
                         <tr>
                             <th scope="col">Código</th>
@@ -140,54 +167,73 @@
 </main>
 
 <script>
-   function handlePagination(tableSelector, paginationSelector) {
-    const table = document.querySelector(tableSelector);
-    const paginationContainer = document.querySelector(paginationSelector);
-    const prevLink = paginationContainer.querySelector('.prev');
-    const nextLink = paginationContainer.querySelector('.next');
-    const currentPageSpan = paginationContainer.querySelector('.current-page');
+    function handlePaginationAndFilter(tableSelector, paginationSelector, searchInputSelector) {
+     const table = document.querySelector(tableSelector);
+     const paginationContainer = document.querySelector(paginationSelector);
+     const prevLink = paginationContainer.querySelector('.prev');
+     const nextLink = paginationContainer.querySelector('.next');
+     const currentPageSpan = paginationContainer.querySelector('.current-page');
+ 
+     const recordsPerPage = 10;
+     const totalRecords = table.querySelectorAll('tbody tr').length;
+     const totalPages = Math.ceil(totalRecords / recordsPerPage);
+ 
+     let currentPage = 1;
+     showPage(currentPage);
+ 
+     prevLink.addEventListener('click', (event) => {
+         event.preventDefault();
+         if (currentPage > 1) {
+             showPage(--currentPage);
+         }
+     });
+ 
+     nextLink.addEventListener('click', (event) => {
+         event.preventDefault();
+         if (currentPage < totalPages) {
+             showPage(++currentPage);
+         }
+     });
+ 
+     function showPage(pageNumber) {
+         const startIndex = (pageNumber - 1) * recordsPerPage;
+         const endIndex = startIndex + recordsPerPage;
+ 
+         table.querySelectorAll('tbody tr').forEach((row, index) => {
+             row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
+         });
+ 
+         currentPageSpan.textContent = `Página ${pageNumber} de ${totalPages}`;
+     }
+ 
+     function filterTable() {
+         const searchInput = document.querySelector(searchInputSelector).value.toLowerCase();
+         const rows = table.querySelectorAll('tbody tr');
+ 
+         rows.forEach(row => {
+             const cells = row.cells;
+             let match = false;
+ 
+             for (let i = 0; i < cells.length; i++) {
+                 if (cells[i].textContent.toLowerCase().includes(searchInput)) {
+                     match = true;
+                     break;
+                 }
+             }
+ 
+             row.style.display = match ? '' : 'none'; // Mostrar u ocultar la fila
+         });
+     }
+ 
+     document.querySelector(searchInputSelector).addEventListener('input', filterTable);
+ }
+ 
+ // Llama a la función para ambas tablas
+ document.addEventListener('DOMContentLoaded', () => {
+     handlePaginationAndFilter('.table.operators', '.pagination.operators', '#searchInput');
+     handlePaginationAndFilter('.table.buses', '.pagination.buses', '#searchInput2');
+ });
 
-    const recordsPerPage = 10;
-    const totalRecords = table.querySelectorAll('tbody tr').length;
-    const totalPages = Math.ceil(totalRecords / recordsPerPage);
-
-    let currentPage = 1;
-    showPage(currentPage);
-
-    prevLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        if (currentPage > 1) {
-            showPage(--currentPage);
-        }
-    });
-
-    nextLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        if (currentPage < totalPages) {
-            showPage(++currentPage);
-        }
-    });
-
-    function showPage(pageNumber) {
-        const startIndex = (pageNumber - 1) * recordsPerPage;
-        const endIndex = startIndex + recordsPerPage;
-
-        table.querySelectorAll('tbody tr').forEach((row, index) => {
-            row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
-        });
-
-        currentPageSpan.textContent = `Página ${pageNumber} de ${totalPages}`;
-    }
-}
-
-// Llama a la función para ambas tablas
-document.addEventListener('DOMContentLoaded', () => {
-    handlePagination('.table.operators', '.pagination.operators');
-    handlePagination('.table.buses', '.pagination.buses');
-});
-
-
-
-</script>
-
+ </script>
 @endsection
+

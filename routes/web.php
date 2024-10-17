@@ -39,7 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/editarOpe/{id}', [PaginaController::class, 'editarOpe'])->name('editarOpe');
     Route::put('/editarOpe/{id}', [PaginaController::class, 'actualizarOperador'])->name('actualizarOperador');
     Route::get('/editarBus/{id}', [PaginaController::class, 'editarBus'])->name('editarBus');
-     Route::put('/editarBus/{id}', [PaginaController::class, 'actualizarBus'])->name('actualizarBus');
+    Route::put('/editarBus/{id}', [PaginaController::class, 'actualizarBus'])->name('actualizarBus');
 });
 
 

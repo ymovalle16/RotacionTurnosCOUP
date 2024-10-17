@@ -141,3 +141,9 @@ main h1{
 .encabezado2 .btn:hover{
     background-color: #e7ba27;
 }
+
+.search-container input:focus{
+    box-shadow: none;
+    outline: none;
+    border-color: lightgrey;
+}
