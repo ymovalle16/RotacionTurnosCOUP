@@ -8,24 +8,29 @@
 
 @section('content')
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+
 <script>
-$(document).ready(function() {
-    $('.table.operators').DataTable({
-        "paging": false, 
-        "searching": false, 
-        "info": false, 
-        "ordering": true, 
+function sortRowsByCode(tableSelector) {
+    const table = document.querySelector(tableSelector);
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+
+    // Ordenar las filas por el primer valor (Código)
+    const sortedRows = _.sortBy(rows, row => {
+        return row.cells[0].textContent.trim();
     });
 
-    $('.table.buses').DataTable({
-        "paging": false, 
-        "searching": false, 
-        "info": false, 
-        "ordering": true, 
-    });
+    // Reinsertar las filas ordenadas en la tabla
+    const tbody = table.querySelector('tbody');
+    sortedRows.forEach(row => tbody.appendChild(row));
+}
+
+// Ordenar las tablas al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    sortRowsByCode('.table.operators'); // Ordenar por código de operador
+    sortRowsByCode('.table.buses'); // Ordenar por código de bus
 });
+
 </script>
 
 <main class="">
@@ -71,7 +76,7 @@ $(document).ready(function() {
                         @if($operator->bus_code)
                             <td>{{ $operator->bus_code }}</td>
                         @else
-                            <td><p>Sin bus Asignado</p></td>
+                            <td>Sin bus Asignado</td>
                         @endif
                         <td>{{ $operator->status->status_name }}</td>
                         <td>
@@ -167,73 +172,84 @@ $(document).ready(function() {
 </main>
 
 <script>
-    function handlePaginationAndFilter(tableSelector, paginationSelector, searchInputSelector) {
-     const table = document.querySelector(tableSelector);
-     const paginationContainer = document.querySelector(paginationSelector);
-     const prevLink = paginationContainer.querySelector('.prev');
-     const nextLink = paginationContainer.querySelector('.next');
-     const currentPageSpan = paginationContainer.querySelector('.current-page');
- 
-     const recordsPerPage = 10;
-     const totalRecords = table.querySelectorAll('tbody tr').length;
-     const totalPages = Math.ceil(totalRecords / recordsPerPage);
- 
-     let currentPage = 1;
-     showPage(currentPage);
- 
-     prevLink.addEventListener('click', (event) => {
-         event.preventDefault();
-         if (currentPage > 1) {
-             showPage(--currentPage);
-         }
-     });
- 
-     nextLink.addEventListener('click', (event) => {
-         event.preventDefault();
-         if (currentPage < totalPages) {
-             showPage(++currentPage);
-         }
-     });
- 
-     function showPage(pageNumber) {
-         const startIndex = (pageNumber - 1) * recordsPerPage;
-         const endIndex = startIndex + recordsPerPage;
- 
-         table.querySelectorAll('tbody tr').forEach((row, index) => {
-             row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
-         });
- 
-         currentPageSpan.textContent = `Página ${pageNumber} de ${totalPages}`;
-     }
- 
-     function filterTable() {
-         const searchInput = document.querySelector(searchInputSelector).value.toLowerCase();
-         const rows = table.querySelectorAll('tbody tr');
- 
-         rows.forEach(row => {
-             const cells = row.cells;
-             let match = false;
- 
-             for (let i = 0; i < cells.length; i++) {
-                 if (cells[i].textContent.toLowerCase().includes(searchInput)) {
-                     match = true;
-                     break;
-                 }
-             }
- 
-             row.style.display = match ? '' : 'none'; // Mostrar u ocultar la fila
-         });
-     }
- 
-     document.querySelector(searchInputSelector).addEventListener('input', filterTable);
- }
- 
- // Llama a la función para ambas tablas
- document.addEventListener('DOMContentLoaded', () => {
-     handlePaginationAndFilter('.table.operators', '.pagination.operators', '#searchInput');
-     handlePaginationAndFilter('.table.buses', '.pagination.buses', '#searchInput2');
- });
+function handlePaginationAndFilter(tableSelector, paginationSelector, searchInputSelector) {
+    const table = document.querySelector(tableSelector);
+    const paginationContainer = document.querySelector(paginationSelector);
+    const prevLink = paginationContainer.querySelector('.prev');
+    const nextLink = paginationContainer.querySelector('.next');
+    const currentPageSpan = paginationContainer.querySelector('.current-page');
 
- </script>
+    const recordsPerPage = 10;
+    const totalRecords = table.querySelectorAll('tbody tr').length;
+    const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+    let currentPage = 1;
+    showPage(currentPage);
+
+    prevLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (currentPage > 1) {
+            showPage(--currentPage);
+        }
+    });
+
+    nextLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (currentPage < totalPages) {
+            showPage(++currentPage);
+        }
+    });
+
+    function showPage(pageNumber) {
+        const startIndex = (pageNumber - 1) * recordsPerPage;
+        const endIndex = startIndex + recordsPerPage;
+
+        table.querySelectorAll('tbody tr').forEach((row, index) => {
+            row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
+        });
+
+        currentPageSpan.textContent = `Página ${pageNumber} de ${totalPages}`;
+    }
+
+    function filterTable() {
+        const searchInput = document.querySelector(searchInputSelector).value.toLowerCase();
+        const rows = table.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+            const cells = row.cells;
+            let match = false;
+
+            for (let i = 0; i < cells.length; i++) {
+                if (cells[i].textContent.toLowerCase().includes(searchInput)) {
+                    match = true;
+                    break;
+                }
+            }
+
+            row.style.display = match ? '' : 'none'; // Mostrar u ocultar la fila
+        });
+
+        if (searchInput === "") {
+            resetPagination(); // Reestablecer la paginación si el input está vacío
+        }
+    }
+
+    function resetPagination() {
+        currentPage = 1;
+        showPage(currentPage);
+    }
+
+    document.querySelector(searchInputSelector).addEventListener('input', filterTable);
+}
+
+// Llama a la función para ambas tablas
+document.addEventListener('DOMContentLoaded', () => {
+    handlePaginationAndFilter('.table.operators', '.pagination.operators', '#searchInput');
+    handlePaginationAndFilter('.table.buses', '.pagination.buses', '#searchInput2');
+});
+
+
+</script> 
+
 @endsection
 

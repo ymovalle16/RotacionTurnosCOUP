@@ -18,7 +18,8 @@
     {{-- Favicon --}}
     <link rel="icon" type="ima/png" href="{{asset('img/logo.png')}}">
 </head>
-<body background="{{ asset('img/fondo_login.jpg') }}">
+<body>
+    <div class="fondo"><img src="{{ asset('img/fondo_login.jpg') }}" alt=""></div>
     <div class="contenedor">
         <!-- Mostrar errores si existen -->
         @if ($errors->any())
