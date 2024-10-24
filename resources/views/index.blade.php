@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{asset('CSS/dash.css')}}">
 @endsection
 
-@section('content')
+
 
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 
-<main class="">
+@section('content')
     <!-- Mostrar errores si existen -->
     @if ($errors->any())
     <div class="alert alert-danger">
@@ -51,12 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
     @endif
     <div class="encabezado">
         <h1 class="navbar-brand fs-2 p-2">Operadores</h1>
-        <a href="{{route ('ingresarOperador')}}" class="btn">Ingresar operador</a>
+        <a href="{{route ('ingresarOperador')}}" class="btn">Crear</a>
     </div>
     
-    <div class="table-responsive m-4 bg-light shadow p-2">
-        <div class="search-container m-4 d-right d-flex justify-content-end">
-            <input type="text" id="searchInput" placeholder="Busca por Código, Nombre, Código de bus o estado" class="form-control rounded-0 w-50"/>
+    <div class="table-responsive m-3 bg-light shadow p-2">
+        <div class="search-container d-right d-flex justify-content-end">
+            <input type="text" id="searchInput" placeholder="Busca por Código, Nombre, Código de bus o estado" class="form-control rounded-0 w-75"/>
         </div>
         <table class="table operators" id="tablaOperadores">
             <thead>
@@ -107,11 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="row mt-5">
         <div class="col-md-6">
             <div class="encabezado2">
-                <h1 class="navbar-brand fs-2 p-2">Buses no asignados</h1>
-                <a href="{{route ('ingresarBus')}}" class="btn btn-sm">Ingresar bus</a>
+                <h1 class="navbar-brand fs-2 p-2">Buses </h1>
+                <a href="{{route ('ingresarBus')}}" class="btn btn-sm">Crear</a>
             </div>
-            <div class="table-responsive m-4 bg-light shadow p-2">
-                <div class="search-container m-4 d-right d-flex justify-content-end">
+            <div class="table-responsive m-3 bg-light shadow p-2">
+                <div class="search-container  d-right d-flex justify-content-end">
                     <input type="text" id="searchInput2" placeholder="Busca por Código o Estado" class="form-control rounded-0 w-75"/>
                 </div>
                 <table class="table buses">
@@ -169,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </table>
         </div>
     </div>
-</main>
 
 <script>
 function handlePaginationAndFilter(tableSelector, paginationSelector, searchInputSelector) {
@@ -247,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
     handlePaginationAndFilter('.table.operators', '.pagination.operators', '#searchInput');
     handlePaginationAndFilter('.table.buses', '.pagination.buses', '#searchInput2');
 });
-
 
 </script> 
 

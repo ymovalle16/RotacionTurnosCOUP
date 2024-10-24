@@ -31,13 +31,18 @@
     <div class="l-navbar shadow" id="nav-bar">
         <nav class="nav">
             <div> 
-                <a href="#" class="nav_logo" id="nav-logo"> <img src="{{asset ('img/logo.png')}}" alt="" style="width: 52px; height: 52px;"> </a>
+                <a href="{{ route ('index')}}" class="nav_logo" id="nav-logo"> <img src="{{asset ('img/logo.png')}}" alt="" style="width: 52px; height: 52px;"> </a>
                 <div class="nav_list"> 
-                    <a href="#" class="nav_link"><i class='bx bx-group nav_icon'></i> <span class="nav_name">Principal</span> </a>
-                    <a href="#" class="nav_link"> <i class='bx bx-refresh nav_icon'></i> <span class="nav_name">Rotaciones</span> </a>
+                    <a href="{{ route ('index')}}" class="nav_link"><i class='bx bx-group nav_icon'></i> <span class="nav_name">Principal</span> </a>
+                    <a href="{{ route ('rotaciones')}}" class="nav_link"> <i class='bx bx-refresh nav_icon'></i> <span class="nav_name">Rotaciones</span> </a>
                 </div>
             </div> 
-            <a href="#" class="nav_link" id="cerrarSe"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">Cerrar Sesión</span> </a>
+           
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf <!-- Necesario para la protección CSRF -->
+                <button type="submit" class="nav_link border-0 bg-white" id="cerrarSe"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">Cerrar Sesión</span> </button>
+            </form>
+        
         </nav>
     </div>
     <!--Container Main start-->
@@ -72,7 +77,7 @@ const showNavbar = (toggleId, navId, bodyId, headerId) => {
             // Ocultar o mostrar el p
             if (nav.classList.contains('show')) {
                 pElement.style.display = 'none'; // Ocultar p
-                mainContent.style.paddingLeft = '3rem'; // Añadir padding izquierdo al contenido
+                mainContent.style.paddingLeft = '0'; // Añadir padding izquierdo al contenido
             } else {
                 pElement.style.display = ''; // Mostrar p
                 mainContent.style.paddingLeft = ''; // Restablecer padding izquierdo del contenido
