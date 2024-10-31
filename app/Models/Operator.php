@@ -30,4 +30,10 @@ class Operator extends Model
         return $this->belongsTo(Status::class, 'id_status'); // Assuming the foreign key in your operators table is status_id
     }
 
+    // Relación con el modelo Group
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
+
 }

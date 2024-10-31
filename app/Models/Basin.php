@@ -24,8 +24,10 @@ class Basin extends Model
     //     return $this->hasMany(Bus::class);
     // }
     
-    // public function operators() {
-    //     return $this->hasMany(Operator::class, 'id_status');
-    // }
+    // Relación con el modelo Group
+    public function groups()
+    {
+        return $this->hasMany(Group::class);
+    }
 
 }
