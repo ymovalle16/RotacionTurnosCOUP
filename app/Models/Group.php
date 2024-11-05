@@ -14,8 +14,8 @@ class Group extends Model
 
     // Definimos los campos que pueden ser asignados en masa
     protected $fillable = [
-        'operator_id',
         'basin_id',
+        'operator_id',
     ];
 
     // Relación con el modelo Operator

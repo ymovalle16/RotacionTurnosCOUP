@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('operator_id');
             $table->unsignedBigInteger('basin_id');
+            $table->unsignedBigInteger('operator_id');
             $table->timestamps();
 
             // Definir las claves foráneas
-            $table->foreign('operator_id')->references('id')->on('operators')->onDelete('cascade');
             $table->foreign('basin_id')->references('id')->on('basins')->onDelete('cascade');
+            $table->foreign('operator_id')->references('id')->on('operators')->onDelete('cascade');
         });
     }
 

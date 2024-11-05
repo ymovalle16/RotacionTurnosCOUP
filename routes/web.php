@@ -40,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/editarOpe/{id}', [PaginaController::class, 'actualizarOperador'])->name('actualizarOperador');
     Route::get('/editarBus/{id}', [PaginaController::class, 'editarBus'])->name('editarBus');
     Route::put('/editarBus/{id}', [PaginaController::class, 'actualizarBus'])->name('actualizarBus');
+    Route::get('/grupos', [PaginaController::class, 'grupos'])->name('grupos');
+    Route::post('/grupos', [PaginaController::class, 'store'])->name('groups.store');
 });
 
 

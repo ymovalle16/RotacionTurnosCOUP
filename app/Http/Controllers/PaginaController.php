@@ -7,6 +7,9 @@ use App\Models\Operator;
 use App\Models\StatusBus;
 use App\Models\Status;
 use App\Models\Bus;
+use App\Models\Basin;
+use App\Models\Group;
+
 
 class PaginaController extends Controller
 {
@@ -215,5 +218,59 @@ class PaginaController extends Controller
         // Redirigir a la página principal con un mensaje de éxito
         return redirect()->route('index')->with('success', 'El estado del bus ha sido actualizado exitosamente');
     }
+
+    public function grupos()
+    {
+        // Obtener todos los grupos con su operador
+        $groups = Group::with('operator')->get();
+    
+        // Obtener los operadores con estatus "Disponible"
+        $operators = Operator::whereHas('status', function ($query) {
+            $query->where('status_name', '=', 'Disponible');
+        })->get();
+    
+        // Obtener todos los registros de cuencas (basins)
+        $basins = Basin::all();
+        
+        // Crear un array de IDs de los operadores que ya están asignados a algún grupo
+        $existingOperatorIds = $groups->pluck('operator_id')->toArray();
+    
+        // Pasar todos estos datos a la vista
+        return view('grupos', compact('operators', 'basins', 'groups', 'existingOperatorIds'));
+    }
+    
+
+public function store(Request $request)
+{
+    $request->validate([
+        'basin_id' => 'required|integer',
+        'operator_id' => 'required|string',
+    ]);
+
+    // Obtén el operador por su código
+    $operator = Operator::where('code', $request->operator_id)->first();
+
+    // Si el operador no existe, muestra un mensaje de error
+    if (!$operator) {
+        return redirect()->route('grupos')->with('error', 'Operador no encontrado.');
+    }
+
+    // Verificar si el operador ya está asignado a otro grupo
+    $existingGroup = Group::where('operator_id', $operator->id)->first();
+    if ($existingGroup) {
+        return redirect()->route('grupos')->with('error', 'Este operador ya está asignado a otro grupo.');
+    }
+
+    // Crea el grupo con el 'id' del operador encontrado
+    $group = Group::create([
+        'basin_id' => $request->basin_id,
+        'operator_id' => $operator->id,  // Usa el 'id' del operador
+    ]);
+
+    return redirect()->route('grupos')->with('success', 'Operador agregado exitosamente.');
+}
+
+
+
 
 }

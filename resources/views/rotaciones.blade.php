@@ -7,7 +7,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-  /* Estilo para bordes de la tabla */
   .table-bordered th, .table-bordered td {
     border: 1px solid #909090 !important;
   }
@@ -18,29 +17,25 @@
   .table{
     width: 85%
   }
-    /* Estilo para la fila de fechas */
-    #rotacion-fechas {
-    background-color: #f0f0f0; /* Gris claro */
+
+  #rotacion-fechas {
+    background-color: #f0f0f0;
   }
 
-  /* Estilo para las columnas de Samaria y Tokio */
   .samaria {
-    background-color: #98fb98 !important; /* Verde */
+    background-color: #98fb98 !important;
   }
   .tokio {
-    background-color: #add8e6 !important; /* Azul */
+    background-color: #add8e6 !important;
   }
-
-  /* Estilo para los encabezados de Código de Bus y Nombre */
   .cod-nombre {
-    background-color: #f0f0f0 !important; /* Gris claro */
+    background-color: #f0f0f0 !important;
   }
-
-  /* Estilo para las celdas restantes */
   .resto {
-    background-color: #ffffff !important; /* Blanco */
+    background-color: #ffffff !important;
   }
 </style>
+
 <div class="table-responsive">
   <div style="display: flex; justify-content: flex-end; width: 92%;">
     <button id="download-pdf" class="btn btn-warning  mb-3">Descargar</button>
@@ -78,19 +73,17 @@
   </table>
 </div>
 
-
-
 <script>
   function getMonday(d) {
     d = new Date(d);
     var day = d.getDay(),
-        diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        diff = d.getDate() - day + (day === 0 ? -6 : 1); 
     return new Date(d.setDate(diff));
   }
 
   function formatDate(date) {
     var options = { day: 'numeric', month: 'long' };
-    return date.toLocaleDateString('es-ES', options); // Use Spanish locale for month in letters
+    return date.toLocaleDateString('es-ES', options); 
   }
 
   function setWeekRange() {
