@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/editarBus/{id}', [PaginaController::class, 'actualizarBus'])->name('actualizarBus');
     Route::get('/grupos', [PaginaController::class, 'grupos'])->name('grupos');
     Route::post('/grupos', [PaginaController::class, 'store'])->name('groups.store');
+    Route::post('/groups/transfer', [PaginaController::class, 'transfer'])->name('groups.transfer');
 });
 
 

@@ -30,4 +30,10 @@ class Basin extends Model
         return $this->hasMany(Group::class);
     }
 
+    public function num_tab()
+    {
+        return $this->hasMany(NumTable::class);
+    }
+
+
 }

@@ -240,37 +240,45 @@ class PaginaController extends Controller
     }
     
 
-public function store(Request $request)
-{
-    $request->validate([
-        'basin_id' => 'required|integer',
-        'operator_id' => 'required|string',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'basin_id' => 'required|integer',
+            'operator_id' => 'required|string',
+        ]);
 
-    // Obtén el operador por su código
-    $operator = Operator::where('code', $request->operator_id)->first();
+        // Obtén el operador por su código
+        $operator = Operator::where('code', $request->operator_id)->first();
 
-    // Si el operador no existe, muestra un mensaje de error
-    if (!$operator) {
-        return redirect()->route('grupos')->with('error', 'Operador no encontrado.');
+        // Si el operador no existe, muestra un mensaje de error
+        if (!$operator) {
+            return redirect()->route('grupos')->with('error', 'Operador no encontrado.');
+        }
+
+        // Verificar si el operador ya está asignado a otro grupo
+        $existingGroup = Group::where('operator_id', $operator->id)->first();
+        if ($existingGroup) {
+            return redirect()->route('grupos')->with('error', 'Este operador ya está asignado a otro grupo.');
+        }
+
+        // Crea el grupo con el 'id' del operador encontrado
+        $group = Group::create([
+            'basin_id' => $request->basin_id,
+            'operator_id' => $operator->id,  // Usa el 'id' del operador
+        ]);
+
+        return redirect()->route('grupos')->with('success', 'Operador agregado exitosamente.');
     }
 
-    // Verificar si el operador ya está asignado a otro grupo
-    $existingGroup = Group::where('operator_id', $operator->id)->first();
-    if ($existingGroup) {
-        return redirect()->route('grupos')->with('error', 'Este operador ya está asignado a otro grupo.');
+    public function transfer(Request $request)
+    {
+        $group = Group::find($request->group_id);
+        $group->basin_id = ($group->basin_id == 1) ? 2 : 1; // Cambiar entre Samaria (1) y Tokio (2)
+        $group->save();
+    
+        return response()->json(['success' => true, 'new_basin' => $group->basin->basin_name]);
     }
-
-    // Crea el grupo con el 'id' del operador encontrado
-    $group = Group::create([
-        'basin_id' => $request->basin_id,
-        'operator_id' => $operator->id,  // Usa el 'id' del operador
-    ]);
-
-    return redirect()->route('grupos')->with('success', 'Operador agregado exitosamente.');
-}
-
-
+    
 
 
 }

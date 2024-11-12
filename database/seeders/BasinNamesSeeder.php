@@ -16,6 +16,8 @@ class BasinNamesSeeder extends Seeder
         $BasinNames = [
             'Samaria',
             'Tokio',
+            'Ruta 9',
+            'Ruta 34',
         ];
         foreach ( $BasinNames as $names){
             Basin::create([
