@@ -45,12 +45,48 @@
       background-color: #add8e6 !important;
     }
 
+    #addRuta9{
+    background-color: #f15353 !important;
+    color: white
+    }
+
+    #addRuta34{
+      background-color: #f6f85d !important;
+    }
+
+    #BotonT {
+        border: none;
+        outline: none
+    }
+
+    #BotonT:focus {
+        box-shadow: none;
+    }
+
+    #BotonT:hover{
+        background-color: #198754 !important;
+    }
+
+    select{
+        border: none;
+        outline: none;
+    }
+
+    select:hover{
+        box-shadow: none;
+    }
+
+    option{
+        background-color: #f0f0f0;
+        color: black;
+    }
+
 </style>
 
 <div class="d-flex justify-content-between mb-3 w-75 mx-auto">
     <button id="addSamaria" class="btn " onclick="setBasinId(1)">Agregar a Samaria</button>
-    <button  class="btn btn-danger" >Agregar a Ruta 9</button>
-    <button  class="btn btn-warning" >Agregar a Ruta 34</button>
+    <button  id="addRuta9" class="btn " onclick="setBasinId(3)">Agregar a Ruta 9</button>
+    <button  id="addRuta34" class="btn " onclick="setBasinId(4)">Agregar a Ruta 34</button>
     <button id="addTokio" class="btn " onclick="setBasinId(2)">Agregar a Tokio</button>
 </div> 
 
@@ -73,13 +109,20 @@
         <tbody>
             @foreach ($groups as $group)
                 <tr data-group-id="{{ $group->id }}">
-                    <td colspan="2">{{ $group->basin->basin_name }}</td>
+                    <td colspan="2">{{ $group->basin->basin_name }}</td> <!-- Nombre de la cuenca -->
                     <td colspan="2">
                         <div class="d-flex justify-content-between p-0">
-                            {{ $group->operator->code }}
-                            <button type="button" class="btn btn-sm btn-success transfer-btn">
+                            {{ $group->operator->code }} <!-- Código de operador -->
+                            <button id="BotonT" type="button" class="btn btn-sm btn-success transfer-btn">
                                 <i class='bx bx-transfer'></i>
-                            </button>
+                                <select class="bg-success text-light border-0" onchange="transferOperator(this)">
+                                    <option value="">Transferir o Soltar</option>
+                                    @foreach($basins as $basin)
+                                        <option value="{{ $basin->id }}">{{ $basin->basin_name }}</option>
+                                    @endforeach
+                                    <option value="soltar">Soltar</option>
+                                </select>
+                            </button>                                                     
                         </div>
                     </td>
                 </tr>
@@ -122,41 +165,73 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    window.setBasinId = function(basinId) {
-        document.getElementById('basin_id').value = basinId;
-        $('#operatorModal').modal('show');
-    }
-
-    // Filtrar grupos en la tabla en tiempo real
-    $('#groupSearch').on('input', function() {
-        var searchValue = $(this).val().toLowerCase();
-        $('#rotacion-table tbody tr').filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(searchValue) > -1);
-        });
-    });
-
-    // Transferir cuenca del operador
-    $('.transfer-btn').on('click', function() {
-        var row = $(this).closest('tr');
-        var groupId = row.data('group-id');
-
-        $.ajax({
-            url: '{{ route("groups.transfer") }}',
-            method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                group_id: groupId
-            },
-            success: function(response) {
-                if (response.success) {
-                    row.find('td').first().text(response.new_basin);
-                } else {
-                    alert('Error al transferir el operador.');
-                }
+    $(document).ready(function() {
+       window.setBasinId = function(basinId) {
+           document.getElementById('basin_id').value = basinId;
+           $('#operatorModal').modal('show');
+       }
+   
+       window.transferOperator = function(selectElement) {
+            var basinId = selectElement.value;
+            var groupId = $(selectElement).closest('tr').data('group-id');
+            
+            // Manejar específicamente la opción "soltar"
+            if (basinId === "soltar") {
+                basinId = null;
             }
+
+            $.ajax({
+                url: "{{ route('groups.transfer') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    basin_id: basinId,
+                    group_id: groupId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload(); // Recargar la página
+                    } else {
+                        alert(response.message || 'Error en la transferencia');
+                    }
+                },
+                error: function(xhr) {
+                    var errorMessage = xhr.responseJSON 
+                        ? (xhr.responseJSON.message || 'Error desconocido')
+                        : 'Error en la solicitud';
+                    
+                    alert(errorMessage);
+                }
+            });
+        }
+   
+        $(document).ready(function() {
+            // Filtrar grupos en la tabla en tiempo real
+            $('#groupSearch').on('input', function() {
+                var searchValue = $(this).val().toLowerCase(); // Obtener el valor de búsqueda y convertirlo a minúsculas
+                
+                // Recorremos cada fila de la tabla
+                $('#rotacion-table tbody tr').each(function() {
+                    // Accedemos a la celda que contiene el nombre de la cuenca (columna 1)
+                    var basinText = $(this).find('td').eq(0).text().toLowerCase().trim(); // Nombre de la cuenca
+                    
+                    // Accedemos al div que contiene el código del operador (dentro de la segunda celda)
+                    var operatorText = $(this).find('td').eq(1).find('div').contents().filter(function() {
+                        return this.nodeType === Node.TEXT_NODE;
+                    }).text().toLowerCase().trim(); // Código del operador
+
+                    // Verifica si el texto de búsqueda está en el nombre de la cuenca o en el código del operador
+                    var matchBasin = basinText.includes(searchValue); // Coincide con el nombre de la cuenca
+                    var matchOperator = operatorText.includes(searchValue); // Coincide con el código del operador
+
+                    // Mostrar fila si coincide con el nombre de la cuenca o el código del operador
+                    $(this).toggle(matchBasin || matchOperator);
+                });
+            });
         });
     });
-});
 </script>
+    
 @endsection
+
+{{-- <i class='bx bxs-hand-up'></i> --}}

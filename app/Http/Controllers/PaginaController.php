@@ -9,6 +9,8 @@ use App\Models\Status;
 use App\Models\Bus;
 use App\Models\Basin;
 use App\Models\Group;
+use Illuminate\Support\Facades\Log;
+
 
 
 class PaginaController extends Controller
@@ -269,16 +271,41 @@ class PaginaController extends Controller
 
         return redirect()->route('grupos')->with('success', 'Operador agregado exitosamente.');
     }
-
+ 
     public function transfer(Request $request)
     {
-        $group = Group::find($request->group_id);
-        $group->basin_id = ($group->basin_id == 1) ? 2 : 1; // Cambiar entre Samaria (1) y Tokio (2)
-        $group->save();
-    
-        return response()->json(['success' => true, 'new_basin' => $group->basin->basin_name]);
-    }
-    
+        $request->validate([
+            'group_id' => 'required|exists:groups,id',
+            'basin_id' => 'nullable'
+        ]);
 
+        try {
+            $group = Group::findOrFail($request->group_id);
+
+            // Si basin_id es null, significa "soltar"
+            if ($request->basin_id === null) {
+                // Aquí defines qué hacer al "soltar"
+                // Por ejemplo, eliminar el grupo o cambiar su estado
+                $group->delete(); // O lo que necesites hacer
+            } else {
+                // Cambiar de cuenca
+                $group->basin_id = $request->basin_id;
+                $group->save();
+            }
+
+            return response()->json([
+                'success' => true, 
+                'message' => $request->basin_id === null 
+                    ? 'Operador soltado exitosamente' 
+                    : 'Transferencia exitosa'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
 }
