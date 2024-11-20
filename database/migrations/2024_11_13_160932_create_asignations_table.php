@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('asignations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tab_id');
+            $table->unsignedBigInteger('operator_id');
             $table->timestamps();
+
+            $table->foreign('tab_id')->references('id')->on('num_tables')->onDelete('cascade');
+            $table->foreign('operator_id')->references('id')->on('operators')->onDelete('cascade');
         });
     }
 
