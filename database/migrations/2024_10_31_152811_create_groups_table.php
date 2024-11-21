@@ -29,5 +29,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('groups');
+
+        Schema::table('groups', function (Blueprint $table) {
+            $table->foreignId('operator_id')->nullable()->constrained()->onDelete('cascade');
+        });
+        
     }
+
+    
 };

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Operator;
 use App\Models\StatusBus;
@@ -190,9 +191,16 @@ class PaginaController extends Controller
         // Guardar los cambios del operador
         $operator->save();
     
+        // Soltar al operador del grupo si su estado no es "disponible"
+        $availableStatusId = Status::where('status_name', 'Disponible')->first()->id;
+        if ($operator->id_status != $availableStatusId) {
+            DB::table('groups')->where('operator_id', $id)->delete();
+        }
+    
         // Redirigir a la página principal con un mensaje de éxito
         return redirect()->route('index')->with('success', 'Operador actualizado exitosamente');
     }
+    
 
     public function editarBus($id)
     {

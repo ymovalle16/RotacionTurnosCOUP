@@ -15,87 +15,106 @@
     .table-bordered {
         border-collapse: collapse;
     }
-    .table {
-        width: 85%
-    }
 
     .d-flex input {
         border: none;
-        outline: none
+        outline: none;
     }
 
     .d-flex input:focus {
-        box-shadow: none
+        box-shadow: none;
     }
 
     .btn {
         border: none;
-        outline: none
+        outline: none;
     }
 
     .btn button:focus {
-        box-shadow: none
+        box-shadow: none;
     }
 
-    #addSamaria{
-    background-color: #98fb98 !important;
+    #addSamaria {
+        background-color: #98fb98 !important;
     }
 
-    #addTokio{
-      background-color: #add8e6 !important;
+    #addTokio {
+        background-color: #add8e6 !important;
     }
 
-    #addRuta9{
-    background-color: #f15353 !important;
-    color: white
+    #addRuta9 {
+        background-color: #f15353 !important;
+        color: white;
     }
 
-    #addRuta34{
-      background-color: #f6f85d !important;
+    #addRuta34 {
+        background-color: #f6f85d !important;
     }
 
     #BotonT {
         border: none;
-        outline: none
+        outline: none;
     }
 
     #BotonT:focus {
         box-shadow: none;
     }
 
-    #BotonT:hover{
+    #BotonT:hover {
         background-color: #198754 !important;
     }
 
-    select{
+    select {
         border: none;
         outline: none;
     }
 
-    select:hover{
+    select:hover {
         box-shadow: none;
     }
 
-    option{
+    option {
         background-color: #f0f0f0;
         color: black;
+    }
+
+    .pagination a{
+    background-color: #ffcc2a;
+    }
+
+    .pagination a:hover{
+        background-color: #e7ba27;
+    }
+
+    .pagination a:focus{
+        box-shadow: none;
+        outline: none;
+        background-color: #ffcc2a;
+    }
+
+    nav span{
+        margin: 0 10px 0 10px;
+    }
+
+    .table-responsive{
+        width: 85%;
     }
 
 </style>
 
 <div class="d-flex justify-content-between mb-3 w-75 mx-auto">
-    <button id="addSamaria" class="btn " onclick="setBasinId(1)">Agregar a Samaria</button>
-    <button  id="addRuta9" class="btn " onclick="setBasinId(3)">Agregar a Ruta 9</button>
-    <button  id="addRuta34" class="btn " onclick="setBasinId(4)">Agregar a Ruta 34</button>
-    <button id="addTokio" class="btn " onclick="setBasinId(2)">Agregar a Tokio</button>
-</div> 
+    <button id="addSamaria" class="btn" onclick="setBasinId(1)">Agregar a Samaria</button>
+    <button id="addRuta9" class="btn" onclick="setBasinId(3)">Agregar a Ruta 9</button>
+    <button id="addRuta34" class="btn" onclick="setBasinId(4)">Agregar a Ruta 34</button>
+    <button id="addTokio" class="btn" onclick="setBasinId(2)">Agregar a Tokio</button>
+</div>
 
 <!-- Filtro de búsqueda -->
 <div class="d-flex justify-content-end mb-3 w-75 mx-auto">
     <input type="text" id="groupSearch" class="form-control" placeholder="Buscar por cuenca o código de operador">
 </div>
 
-<div class="table-responsive">
+<div class="table-responsive bg-light shadow p-2 mx-auto mb-5">
     <table id="rotacion-table" class="table table-bordered bg-light mx-auto">
         <thead>
             <tr>
@@ -129,6 +148,16 @@
             @endforeach     
         </tbody>
     </table>
+    <!-- Paginación -->
+    <nav class="pagination justify-content-center">
+        <a class="page-link prev text-dark" href="#" aria-label="Previous">
+            <span aria-hidden="true"><</span>
+        </a>
+        <span class="current-page"></span>
+        <a class="page-link next text-dark" href="#" aria-label="Next">
+            <span aria-hidden="true">></span>
+        </a>
+    </nav>
 </div>
 
 <!-- Modal -->
@@ -166,72 +195,116 @@
 
 <script>
     $(document).ready(function() {
-       window.setBasinId = function(basinId) {
-           document.getElementById('basin_id').value = basinId;
-           $('#operatorModal').modal('show');
-       }
-   
-       window.transferOperator = function(selectElement) {
-            var basinId = selectElement.value;
-            var groupId = $(selectElement).closest('tr').data('group-id');
-            
-            // Manejar específicamente la opción "soltar"
-            if (basinId === "soltar") {
-                basinId = null;
-            }
+    window.setBasinId = function(basinId) {
+        document.getElementById('basin_id').value = basinId;
+        $('#operatorModal').modal('show');
+    }
 
-            $.ajax({
-                url: "{{ route('groups.transfer') }}",
-                method: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    basin_id: basinId,
-                    group_id: groupId
-                },
-                success: function(response) {
-                    if (response.success) {
-                        location.reload(); // Recargar la página
-                    } else {
-                        alert(response.message || 'Error en la transferencia');
-                    }
-                },
-                error: function(xhr) {
-                    var errorMessage = xhr.responseJSON 
-                        ? (xhr.responseJSON.message || 'Error desconocido')
-                        : 'Error en la solicitud';
-                    
-                    alert(errorMessage);
-                }
-            });
+    window.transferOperator = function(selectElement) {
+        var basinId = selectElement.value;
+        var groupId = $(selectElement).closest('tr').data('group-id');
+
+        // Manejar específicamente la opción "soltar"
+        if (basinId === "soltar") {
+            basinId = null;
         }
-   
-        $(document).ready(function() {
-            // Filtrar grupos en la tabla en tiempo real
-            $('#groupSearch').on('input', function() {
-                var searchValue = $(this).val().toLowerCase(); // Obtener el valor de búsqueda y convertirlo a minúsculas
+
+        $.ajax({
+            url: "{{ route('groups.transfer') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                basin_id: basinId,
+                group_id: groupId
+            },
+            success: function(response) {
+                if (response.success) {
+                    location.reload(); // Recargar la página
+                } else {
+                    alert(response.message || 'Error en la transferencia');
+                }
+            },
+            error: function(xhr) {
+                var errorMessage = xhr.responseJSON 
+                    ? (xhr.responseJSON.message || 'Error desconocido')
+                    : 'Error en la solicitud';
                 
-                // Recorremos cada fila de la tabla
-                $('#rotacion-table tbody tr').each(function() {
-                    // Accedemos a la celda que contiene el nombre de la cuenca (columna 1)
-                    var basinText = $(this).find('td').eq(0).text().toLowerCase().trim(); // Nombre de la cuenca
-                    
-                    // Accedemos al div que contiene el código del operador (dentro de la segunda celda)
-                    var operatorText = $(this).find('td').eq(1).find('div').contents().filter(function() {
-                        return this.nodeType === Node.TEXT_NODE;
-                    }).text().toLowerCase().trim(); // Código del operador
-
-                    // Verifica si el texto de búsqueda está en el nombre de la cuenca o en el código del operador
-                    var matchBasin = basinText.includes(searchValue); // Coincide con el nombre de la cuenca
-                    var matchOperator = operatorText.includes(searchValue); // Coincide con el código del operador
-
-                    // Mostrar fila si coincide con el nombre de la cuenca o el código del operador
-                    $(this).toggle(matchBasin || matchOperator);
-                });
-            });
+                alert(errorMessage);
+            }
         });
+    }
+
+    // Filtrar grupos en la tabla en tiempo real
+    $('#groupSearch').on('input', function() {
+        var searchInput = $(this).val().toLowerCase();
+        $('#rotacion-table tbody tr').each(function() {
+            var basinText = $(this).find('td').eq(0).text().toLowerCase().trim();
+            var operatorText = $(this).find('td').eq(1).find('div').contents().filter(function() {
+                return this.nodeType === Node.TEXT_NODE;
+            }).text().toLowerCase().trim();
+
+            var matchBasin = basinText.includes(searchInput);
+            var matchOperator = operatorText.includes(searchInput);
+
+            $(this).toggle(matchBasin || matchOperator);
+        });
+
+        // Condición llamar a handlePagination
+        if (searchInput === "") {
+            handlePagination('#rotacion-table', '.pagination');
+        }
     });
-</script>
     
+    function handlePagination(tableSelector, paginationSelector) {
+        const table = document.querySelector(tableSelector);
+        const paginationContainer = document.querySelector(paginationSelector);
+        const prevLink = paginationContainer.querySelector('.prev');
+        const nextLink = paginationContainer.querySelector('.next');
+        const currentPageSpan = paginationContainer.querySelector('.current-page');
+
+        const recordsPerPage = 10;
+        const totalRecords = table.querySelectorAll('tbody tr').length;
+        const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+        let currentPage = 1;
+        showPage(currentPage);
+
+        prevLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (currentPage > 1) {
+                showPage(--currentPage);
+            }
+        });
+
+        nextLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (currentPage < totalPages) {
+                showPage(++currentPage);
+            }
+        });
+
+        function showPage(pageNumber) {
+            const startIndex = (pageNumber - 1) * recordsPerPage;
+            const endIndex = startIndex + recordsPerPage;
+
+            table.querySelectorAll('tbody tr').forEach((row, index) => {
+                row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
+            });
+
+            currentPageSpan.textContent = `Página ${pageNumber} de ${totalPages}`;
+        }
+
+        // Inicializa la paginación
+        showPage(currentPage);
+    }
+
+    // Llama a la función de paginación para la tabla de grupos
+    handlePagination('#rotacion-table', '.pagination');
+});
+
+</script>
+
 @endsection
+
 
 {{-- <i class='bx bxs-hand-up'></i> --}}
