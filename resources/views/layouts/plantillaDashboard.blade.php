@@ -36,6 +36,7 @@
                     <a href="{{ route ('index')}}" class="nav_link"><i class='bx bx-group nav_icon'></i> <span class="nav_name">Principal</span> </a>
                     <a href="{{ route ('rotaciones')}}" class="nav_link"> <i class='bx bx-refresh nav_icon'></i> <span class="nav_name">Rotaciones</span> </a>
                     <a href="{{ route ('grupos')}}" class="nav_link"> <i class='bx bx-table nav_icon'></i> <span class="nav_name">Grupos</span> </a>
+                    <a href="{{ route ('asignaciones')}}" class="nav_link"> <i class='bx bx-news nav_icon'></i> </i> <span class="nav_name">Asignaciones</span> </a>
                 </div>
             </div> 
            

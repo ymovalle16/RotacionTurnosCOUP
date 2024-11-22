@@ -2,105 +2,11 @@
 @section('title', 'Grupos')
 
 @section('estilos')
-<link rel="stylesheet" href="{{asset('CSS/ingEdi.css')}}">
+<link rel="stylesheet" href="{{asset('CSS/group.css')}}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<style>
-    .table-bordered th, .table-bordered td {
-        border: 1px solid #909090 !important;
-    }
-    .table-bordered {
-        border-collapse: collapse;
-    }
-
-    .d-flex input {
-        border: none;
-        outline: none;
-    }
-
-    .d-flex input:focus {
-        box-shadow: none;
-    }
-
-    .btn {
-        border: none;
-        outline: none;
-    }
-
-    .btn button:focus {
-        box-shadow: none;
-    }
-
-    #addSamaria {
-        background-color: #98fb98 !important;
-    }
-
-    #addTokio {
-        background-color: #add8e6 !important;
-    }
-
-    #addRuta9 {
-        background-color: #f15353 !important;
-        color: white;
-    }
-
-    #addRuta34 {
-        background-color: #f6f85d !important;
-    }
-
-    #BotonT {
-        border: none;
-        outline: none;
-    }
-
-    #BotonT:focus {
-        box-shadow: none;
-    }
-
-    #BotonT:hover {
-        background-color: #198754 !important;
-    }
-
-    select {
-        border: none;
-        outline: none;
-    }
-
-    select:hover {
-        box-shadow: none;
-    }
-
-    option {
-        background-color: #f0f0f0;
-        color: black;
-    }
-
-    .pagination a{
-    background-color: #ffcc2a;
-    }
-
-    .pagination a:hover{
-        background-color: #e7ba27;
-    }
-
-    .pagination a:focus{
-        box-shadow: none;
-        outline: none;
-        background-color: #ffcc2a;
-    }
-
-    nav span{
-        margin: 0 10px 0 10px;
-    }
-
-    .table-responsive{
-        width: 85%;
-    }
-
-</style>
 
 <div class="d-flex justify-content-between mb-3 w-75 mx-auto">
     <button id="addSamaria" class="btn" onclick="setBasinId(1)">Agregar a Samaria</button>
@@ -305,6 +211,5 @@
 </script>
 
 @endsection
-
 
 {{-- <i class='bx bxs-hand-up'></i> --}}

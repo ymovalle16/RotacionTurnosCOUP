@@ -316,4 +316,9 @@ class PaginaController extends Controller
         }
     }
 
+    public function asignaciones()
+    {
+        return view('asignaciones');
+    }
+
 }
