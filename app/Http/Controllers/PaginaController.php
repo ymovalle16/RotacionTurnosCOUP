@@ -10,8 +10,8 @@ use App\Models\Status;
 use App\Models\Bus;
 use App\Models\Basin;
 use App\Models\Group;
+use App\Models\NumTable;
 use Illuminate\Support\Facades\Log;
-
 
 
 class PaginaController extends Controller
@@ -318,7 +318,11 @@ class PaginaController extends Controller
 
     public function asignaciones()
     {
-        return view('asignaciones');
+        $groups = Group::all();
+        $operators = Operator::all();
+        $tabs = NumTable::all();
+
+        return view('asignaciones', compact('groups, operators'));
     }
 
 }
